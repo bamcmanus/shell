@@ -11,7 +11,9 @@ import (
 func execInput(input string) error {
 	trimmed := strings.TrimSuffix(input, "\n")
 
-	cmd := exec.Command(trimmed)
+	parts := strings.Split(trimmed, " ")
+
+	cmd := exec.Command(parts[0], parts[1:]...)
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 
