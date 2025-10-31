@@ -17,9 +17,22 @@ func execInput(input string) error {
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 
-	fmt.Printf("Command: \n%v\n", cmd)
+	if parts[0] == "cd" && len(parts) == 1 {
+		os.Chdir("/")
+	}
+	var err error
+	switch {
+	case parts[0] == "exit":
+		os.Exit(0)
+	case parts[0] == "cd" && len(parts) == 1:
+		err = os.Chdir("/")
+	case parts[0] == "cd":
+		err = os.Chdir(parts[1])
+	default:
+		err = cmd.Run()
+	}
 
-	return cmd.Run()
+	return err
 }
 
 func main() {
@@ -30,9 +43,6 @@ func main() {
 		input, err := reader.ReadString('\n')
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
-		}
-		if strings.TrimSpace(input) == "exit" {
-			break
 		}
 		if err = execInput(input); err != nil {
 			fmt.Fprintln(os.Stderr, err)
