@@ -35,10 +35,19 @@ func execInput(input string) error {
 	return err
 }
 
+func outputPrompt() {
+	wd, err := os.Getwd()		
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error getting working directory: %s\n", err)
+		fmt.Print("> ")
+		return
+	}
+	fmt.Printf("%s> ", wd)
+}
+
 func main() {
 	for {
-		fmt.Print("> ")
-
+		outputPrompt()
 		reader := bufio.NewReader(os.Stdin)
 		input, err := reader.ReadString('\n')
 		if err != nil {
